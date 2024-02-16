@@ -1,18 +1,32 @@
-import { useState } from 'react';
-import '../components/App.css';
+import { useEffect, useState } from "react";
 import Description from './Description/Description';
 import Feedback from './Feedback/Feedback';
 import Options from './Options/Options';
 
-const App = () => {
-	const [ clicks, setClicks ] = useState(0);
+function App() {
+  const [values, setValues] = useState(() => {
+    const savedValues = window.localStorage.getItem("saved-feedbacks");
+    if (savedValues !== null) {
+      return JSON.parse(savedValues);
+    }
+    return {
+      good: 0,
+      neutral: 0,
+      bad: 0
+    };
+  });
 
-const handleClick = () => {
-    // clicks = clicks + 1;
-		setClicks(clicks + 1);
+  useEffect(() => {
+    window.localStorage.setItem("saved-feedbacks", JSON.stringify(values));
+  }, [values]);
+
+const updateFeedback = feedbackType => {
+    setValues(prevFeedback => ({
+      ...prevFeedback,
+      [feedbackType]: prevFeedback[feedbackType] + 1
+    }));
   };
 
-	return <button onClick={handleClick}>Current: {clicks}</button>
 }
 
 export default App
