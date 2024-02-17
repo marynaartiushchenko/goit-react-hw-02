@@ -27,14 +27,24 @@ function App() {
       [feedbackType]: prevFeedback[feedbackType] + 1
     }));
   };
-
+  
   const totalFeedback = values.good + values.neutral + values.bad;
+  
+  const totalPositive = Math.round(((values.good + values.neutral) / totalFeedback) * 100);
+ const handleReset = () => {
+    setValues({
+      good: 0,
+      neutral: 0,
+      bad: 0
+    });
+  };
 
   return (
     <>
-      <Description />
-      {totalFeedback > 0 ? <Feedback values={values} /> : <Notification />}
-      <Options updateFeedback={updateFeedback} />
+     <Description />
+      <Feedback values={values} totalFeedback={totalFeedback} totalPositive={totalPositive}  />
+      <Options updateFeedback={updateFeedback} totalFeedback={totalFeedback} handleReset={handleReset} />
+      {totalFeedback === 0 && <Notification />}
     </>
   );
 }
